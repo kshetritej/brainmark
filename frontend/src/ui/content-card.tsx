@@ -1,53 +1,34 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { renderIcon } from "@/lib/render-icon";
+import {  Share2,  Trash2 } from "lucide-react";
+import { Content } from "@/types/ContentTypes";
 
-interface Tag {
-    _id: string;
-    name: string;
-}
-
-interface PostType {
-    _id: string;
-    name: string;
-}
-
-export interface Content {
-    _id: string;
-    title: string;
-    content: string;
-    author: string;
-    tags: Tag[];
-    type: PostType;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
-}
-
-export function ContentCard({ content }: { content: Content[] }) {
+export function ContentCard({ content }: { content: Content }) {
     return (
-        <>
-            {content?.map(content => {
-                return (
-                    <Card className="m-4">
-                        <CardHeader >
-                            <CardTitle className="flex justify-between">{content.title}
-                            <Badge variant={'outline'} className="rounded-full ">{renderIcon(content.type.name.toLowerCase())}</Badge>
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            {content.content}
-                        </CardContent>
-                        <CardFooter>
-                            <CardDescription className="flex gap-2">{content.tags.map(tag =>
-                                <Badge variant={'secondary'} className="rounded-full">{tag.name}</Badge>
-                            )}
-                            </CardDescription>
-                        </CardFooter>
-                    </Card>
-
-                )
-            })}
-        </>
+            <Card  key={content._id} className="w-full m-4">
+                <CardHeader className="flex flex-row justify-between">
+                    <CardTitle className="flex gap-2 items-center" >
+                        {renderIcon(content?.type?.name.toLowerCase())}
+                        {content?.title.substring(0, 25)}
+                    </CardTitle>
+                    <div className="flex gap-2 items-center text-muted-foreground">
+                        <Share2 />
+                        <Trash2 />
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    {content?.content}
+                </CardContent>
+                <CardFooter className="flex flex-col items-start gap-4">
+                    <CardDescription className="flex gap-2">{content?.tags?.map(tag =>
+                        <Badge key={tag._id} variant={'secondary'} className="rounded-full">#{tag.name}</Badge>
+                    )}
+                    </CardDescription>
+                    <span className="text-sm text-accent-foreground font-medium">
+                        Added on {new Date(content?.createdAt).toLocaleDateString()}
+                    </span>
+                </CardFooter>
+            </Card>
     )
 }
