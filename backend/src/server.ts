@@ -5,33 +5,24 @@ import { User } from "./schemas/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-import dotenv from "dotenv";
-import { Content } from "./schemas/Content";
-import { Tag } from "./schemas/Tag";
+import cors from "cors";
+import { JWT_SECRET } from "./configs";
+import { contentRoute } from "./routes/content.route";
 import { Type } from "./schemas/Type";
-dotenv.config();
-const jwtSecret = process.env.JWT_SECRET;
 
-async function findOrCreateTags(tags: string[]) {
-  const tagIds = await Promise.all(
-    tags.map(async (tag: string) => {
-      if (!tag) {
-        return;
-      }
-      const existingTag = await Tag.findOne({ name: tag });
-      if(existingTag) return existingTag._id;
+const jwtSecret = JWT_SECRET;
 
-      const newTag = new Tag({ name: tag });
-      const response = await newTag.save();
-      return response._id;
-    })
-  );
-  return tagIds.filter(tagId => tagId!==null);
-}
 const app = express();
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
+app.use("/api/content", contentRoute);
 //-----------User--------------------//
 app.post("/user/register", async (req: Request, res: Response) => {
   const { email, username, password } = req.body;
@@ -71,6 +62,7 @@ app.post("/user/login", async (req: Request, res: Response) => {
   );
   res.status(200).json({ message: "Login Successful", token });
 });
+
 //-----------Type--------------------//
 app.post("/type/new", async (req: Request, res: Response) => {
   const { name } = req.body;
@@ -82,6 +74,10 @@ app.post("/type/new", async (req: Request, res: Response) => {
   const newType = new Type({ name });
   const response = await newType.save();
   res.status(201).json({ message: "Type created successfully", response });
+});
+app.get("/type/all", async (req: Request, res: Response) => {
+  const types = await Type.find();
+  res.status(200).json({ message: "Types fetched successfully", types });
 });
 
 //-----------Content--------------------//
@@ -126,13 +122,15 @@ app.post("/content/new", async (req: Request, res: Response) => {
   });
 });
 
-app.get("/content/all", async (req: Request, res: Response) => {
-  const { token } = req.headers;
-  const { id } = jwt.verify(token, jwtSecret);
-  console.warn("id: ", id);
-  const content = await Content.find({ author: id }).populate("tags","name").populate("type","name");
-  res.status(200).json({ message: "Content fetched successfully", content });
-});
+// app.get("/content/all", async (req: Request, res: Response) => {
+//   const { token } = req.headers;
+//   const { id } = jwt.verify(token, jwtSecret);
+//   console.warn("id: ", id);
+//   const content = await Content.find()
+//     .populate("tags", "name")
+//     .populate("type", "name");
+//   res.status(200).json({ message: "Content fetched successfully", content });
+// });
 
 app.listen(3000, () => {
   connectDB().then(() => console.log("Server runing on port 3000"));

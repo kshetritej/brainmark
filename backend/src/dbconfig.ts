@@ -1,12 +1,9 @@
-import dotenv from "dotenv";
 import mongoose from "mongoose";
-dotenv.config();
-
-const URI = process.env.DB_URI;
+import { DB_URI } from "./configs";
 
 export async function connectDB() {
   try {
-    mongoose.connect(URI!);
+    mongoose.connect(DB_URI!);
     console.log("Connected to MongoDB");
   } catch (err: any) {
     throw new Error(err);
