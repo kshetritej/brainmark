@@ -12,7 +12,11 @@ function App() {
   const { data } = useQuery({
     queryKey: ['contents'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:3000/content/all')
+      const res = await axios.get('http://localhost:3000/api/content/all', {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
       return res.data?.content
     }
   })

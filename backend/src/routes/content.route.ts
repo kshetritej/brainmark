@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-
+import { ObjectId } from "mongodb";
 import { Content } from "../schemas/Content";
 import { Type } from "../schemas/Type";
 import authMiddleware, { AuthenticatedRequest } from "../middleware";
@@ -29,10 +29,11 @@ contentRoute.post(
       res.status(400).json({ message: "Invalid Type" });
       return;
     }
+    console.log("author::", user.id);
     const newContent = new Content({
       title: title,
       content: content,
-      author: user._id,
+      author: user.id,
       tags: resolvedTags,
       type: resolvedType._id,
     });
@@ -49,7 +50,7 @@ contentRoute.get(
   authMiddleware,
   async (req: AuthenticatedRequest, res: Response) => {
     const user = req.user;
-    const content = await Content.find({ author: user._id })
+    const content = await Content.find({ author: user.id })
       .populate("tags", "name")
       .populate("type", "name");
     res.status(200).json({ message: "Content fetched successfully", content });
@@ -62,9 +63,15 @@ contentRoute.delete(
   async (req: AuthenticatedRequest, res: Response) => {
     const id = req.params;
     const user = req.user;
-    const contentToDelete = await Content.findById(id, { author: user._id });
+    console.log("user", user);
+    const contentToDelete = await Content.findById(new ObjectId(id), {
+      author: user.id,
+    });
     if (contentToDelete) {
+      console.log("contentToDelete", contentToDelete);
+      console.log(" i was here.")
       const response = await Content.findOneAndDelete(contentToDelete._id);
+      console.warn("content might be deleted.")
       return res
         .status(203)
         .json({ message: "content deleted successfully", response });

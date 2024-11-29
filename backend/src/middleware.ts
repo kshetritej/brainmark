@@ -14,7 +14,7 @@ const authMiddleware = (
   const token = req.headers?.token;
   if (!token) {
     return res.status(401).json({
-      message: "Token is not provided. Try logging in again.",
+      message: "Session Expired. Try logging in again.",
     });
   }
 
