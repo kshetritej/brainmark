@@ -90,7 +90,7 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
         mutationKey: ['content'],
         mutationFn: async (data: any) => {
             const tags = data.tags.split(',')
-            const res = await axios.post('http://localhost:3000/content/new', { title: data.title, type: data.type, content: data.content, tags: tags }, {
+            const res = await axios.post('http://localhost:3000/api/content/new', { title: data.title, type: data.type, content: data.content, tags: tags }, {
                 headers: {
                     token: token
                 }

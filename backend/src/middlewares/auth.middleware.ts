@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "./configs";
+import { JWT_SECRET } from "../configs/envConfig";
 
 export interface AuthenticatedRequest extends Request {
-  user?: any; // Replace `any` with the actual user type
+  user?: any; 
 }
 
 const authMiddleware = (

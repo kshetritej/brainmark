@@ -1,11 +1,9 @@
-import { Navbar } from '@/ui/navbar'
 import { ContentCard } from '@/ui/content-card'
 import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
 import { Content } from './types/ContentTypes'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from './components/ui/button'
-import { Plus, Share2 } from 'lucide-react'
+import {  Share2 } from 'lucide-react'
 import { AppDrawer } from './ui/add-drawer'
 function App() {
 
@@ -20,7 +18,7 @@ function App() {
       return res.data?.content
     }
   })
-  console.log('contents: ', data)
+
   return (
     <div >
       <div className='flex justify-between'>

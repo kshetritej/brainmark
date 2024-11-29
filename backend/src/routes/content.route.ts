@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import { ObjectId } from "mongodb";
 import { Content } from "../schemas/Content";
 import { Type } from "../schemas/Type";
-import authMiddleware, { AuthenticatedRequest } from "../middleware";
+import authMiddleware, { AuthenticatedRequest } from "../middlewares/auth.middleware";
 import { findOrCreateTags } from "../utils/findOrCreateTags";
 
 export const contentRoute = Router();
@@ -63,7 +63,6 @@ contentRoute.delete(
   async (req: AuthenticatedRequest, res: Response) => {
     const id = req.params;
     const user = req.user;
-    console.log("user", user);
     const contentToDelete = await Content.findById(new ObjectId(id), {
       author: user.id,
     });
