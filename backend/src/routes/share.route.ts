@@ -32,11 +32,15 @@ shareRoute.get("/:token", async (req: Request, res: Response) => {
     res.status(404).json({ message: "Share not found" });
     return;
   }
-  const content = await Content.find({ _id: share.contentId });
+  if (share?.expire < Date.now()) {
+    res.status(401).json({ message: "Share expired" });
+    return;
+  }
+  const content = await Content.find({ _id: share.contentId }).populate("type", "name").populate("tags", "name");
   res.json({
     message: "Share fetched successfully",
     content,
-    token
+    token,
   });
 });
 
