@@ -8,42 +8,45 @@ import {
     SidebarMenuButton,
 } from "@/components/ui/sidebar"
 import { renderIcon } from "@/lib/render-icon"
-import { useQuery } from "@tanstack/react-query"
+import { useGetContentByType } from "@/queries/content.query"
+import { useGetAllTypes } from "@/queries/type.query"
 import { Link } from "@tanstack/react-router"
-import axios from "axios"
-import { Brain, Hash, Home, Icon, User } from "lucide-react"
+import { Brain, Hash, User } from "lucide-react"
 
 
 export function AppSidebar() {
-    const { data: types } = useQuery({
-        queryKey: ['types'],
-        queryFn: async () => {
-            const res = await axios.get('http://localhost:3000/type/all')
-            return res.data.types
-        }
-    })
+    const types = useGetAllTypes().data?.types;
+    const getContentByType = useGetContentByType();
     const menuItems = types?.map((type: any) => {
         return {
+            id: type._id,
             name: type.name,
         }
     })
     return (
         <Sidebar>
-            <SidebarHeader className="flex flex-row gap-2 items-center text-2xl font-medium">
-                <Brain /> Brainmark
+            <SidebarHeader className="text-2xl font-medium">
+                <Link to="/" className="flex flex-row gap-2 items-center">
+                    <Brain /> Brainmark
+                </Link>
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel>Application</SidebarGroupLabel>
                     {
                         menuItems?.map((item) =>
-                            <SidebarMenuButton className="py-8">{renderIcon(item.name.toLowerCase())} <span>{item.name}s</span></SidebarMenuButton>
+                            <Link to="/content/$typeId" params={{ typeId: item.id }}>
+                                <SidebarMenuButton className="py-8"
+                                >{renderIcon(item.name.toLowerCase())} <span>{item.name}s</span></SidebarMenuButton>
+                            </Link>
                         )
                     }
-                            <SidebarMenuButton className="py-8"><Hash size={42}/> Tags</SidebarMenuButton>
-                            <Link to="/auth">
-                            <SidebarMenuButton className="py-8"><User size={42}/> Profile</SidebarMenuButton>
-                            </Link>
+                    <Link to="/tags">
+                        <SidebarMenuButton className="py-8"><Hash /> Tags</SidebarMenuButton>
+                    </Link>
+                    <Link to="/auth">
+                        <SidebarMenuButton className="py-8"><User size={42} /> Profile</SidebarMenuButton>
+                    </Link>
 
                 </SidebarGroup>
             </SidebarContent>

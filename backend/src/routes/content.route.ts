@@ -2,7 +2,9 @@ import { Request, Response, Router } from "express";
 import { ObjectId } from "mongodb";
 import { Content } from "../schemas/Content";
 import { Type } from "../schemas/Type";
-import authMiddleware, { AuthenticatedRequest } from "../middlewares/auth.middleware";
+import authMiddleware, {
+  AuthenticatedRequest,
+} from "../middlewares/auth.middleware";
 import { findOrCreateTags } from "../utils/findOrCreateTags";
 
 export const contentRoute = Router();
@@ -68,12 +70,31 @@ contentRoute.delete(
     });
     if (contentToDelete) {
       console.log("contentToDelete", contentToDelete);
-      console.log(" i was here.")
+      console.log(" i was here.");
       const response = await Content.findOneAndDelete(contentToDelete._id);
-      console.warn("content might be deleted.")
+      console.warn("content might be deleted.");
       return res
         .status(203)
         .json({ message: "content deleted successfully", response });
     }
+  }
+);
+
+contentRoute.get(
+  "/type/:id",
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    const content = await Content.find({
+      type: req.params.id,
+      author: req.user?.id,
+    }).populate("type", "name").populate("tags");
+    if (!content) {
+      res.status(404).json({ message: "Content not found" });
+      return;
+    }
+    res.status(200).json({
+      message: "Content fetched successfully",
+      content,
+    });
   }
 );

@@ -42,7 +42,7 @@ authRoute.post("/login", async (req: Request, res: Response) => {
     JWT_SECRET,
     { expiresIn: "3d" }
   );
-  res.status(200).json({ message: "Login Successful", token });
+  res.status(200).json({ message: "Login Successful", token, user });
 });
 
 

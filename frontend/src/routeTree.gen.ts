@@ -11,10 +11,18 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as TagsImport } from './routes/tags'
 import { Route as AuthImport } from './routes/auth'
 import { Route as IndexImport } from './routes/index'
+import { Route as ContentTypeIdImport } from './routes/content/$typeId'
 
 // Create/Update Routes
+
+const TagsRoute = TagsImport.update({
+  id: '/tags',
+  path: '/tags',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthRoute = AuthImport.update({
   id: '/auth',
@@ -25,6 +33,12 @@ const AuthRoute = AuthImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ContentTypeIdRoute = ContentTypeIdImport.update({
+  id: '/content/$typeId',
+  path: '/content/$typeId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -46,6 +60,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
     }
+    '/tags': {
+      id: '/tags'
+      path: '/tags'
+      fullPath: '/tags'
+      preLoaderRoute: typeof TagsImport
+      parentRoute: typeof rootRoute
+    }
+    '/content/$typeId': {
+      id: '/content/$typeId'
+      path: '/content/$typeId'
+      fullPath: '/content/$typeId'
+      preLoaderRoute: typeof ContentTypeIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -54,36 +82,46 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/tags': typeof TagsRoute
+  '/content/$typeId': typeof ContentTypeIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/tags': typeof TagsRoute
+  '/content/$typeId': typeof ContentTypeIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/tags': typeof TagsRoute
+  '/content/$typeId': typeof ContentTypeIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth'
+  fullPaths: '/' | '/auth' | '/tags' | '/content/$typeId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth'
-  id: '__root__' | '/' | '/auth'
+  to: '/' | '/auth' | '/tags' | '/content/$typeId'
+  id: '__root__' | '/' | '/auth' | '/tags' | '/content/$typeId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  TagsRoute: typeof TagsRoute
+  ContentTypeIdRoute: typeof ContentTypeIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  TagsRoute: TagsRoute,
+  ContentTypeIdRoute: ContentTypeIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,7 +135,9 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/auth"
+        "/auth",
+        "/tags",
+        "/content/$typeId"
       ]
     },
     "/": {
@@ -105,6 +145,12 @@ export const routeTree = rootRoute
     },
     "/auth": {
       "filePath": "auth.tsx"
+    },
+    "/tags": {
+      "filePath": "tags.tsx"
+    },
+    "/content/$typeId": {
+      "filePath": "content/$typeId.tsx"
     }
   }
 }

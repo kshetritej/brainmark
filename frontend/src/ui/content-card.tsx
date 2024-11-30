@@ -29,11 +29,11 @@ export function ContentCard({ content }: { content: Content }) {
         }
     })
     return (
-        <Card key={content._id} className="w-full m-4">
+        <Card key={content?._id} className="max-w-sm">
             <CardHeader className="flex flex-row justify-between">
                 <CardTitle className="flex gap-2 items-center" >
-                    {renderIcon(content?.type?.name.toLowerCase())}
-                    {content?.title.substring(0, 25)}
+                    {renderIcon(content?.type?.name?.toLowerCase())}
+                    {content?.title?.substring(0, 25)}
                 </CardTitle>
                 <div className="flex gap-2 items-center text-muted-foreground">
                     <Button variant={'ghost'}>
