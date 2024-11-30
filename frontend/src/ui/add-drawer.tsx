@@ -35,6 +35,7 @@ import { CircleFadingPlus, Plus } from "lucide-react"
 import axios from "axios"
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "@/hooks/use-toast"
+import { Textarea } from "@/components/ui/textarea"
 
 export function AppDrawer() {
     const [open, setOpen] = React.useState(false)
@@ -121,7 +122,7 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
         console.log('create data', data)
         handleContent.mutate(data);
     }
-    const fetchTypes = async () => await axios.get("http://localhost:3000/type/all")
+    const fetchTypes = async () => await axios.get("http://localhost:3000/api/type/all")
     React.useEffect(() => {
         fetchTypes().then(res => setTypes(res.data.types));
         console.log('types', types);
@@ -134,7 +135,7 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="content">Content</Label>
-                <Input id="content" {...register("content")} />
+                <Textarea id="content" {...register("content")} />
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="type">Type</Label>

@@ -18,7 +18,7 @@ function App() {
   return (
     <div className='mx-4'>
       <div className='flex justify-between'>
-        <h1 className="m-4 font-bold text-3xl">All Notes</h1>
+        <h1 className="m-4 font-bold text-3xl">All Brainmarks</h1>
         <div className='flex gap-4'>
           <Button size={'lg'} variant={'secondary'}><Share2 /> Share Brain</Button>
           <AppDrawer />
