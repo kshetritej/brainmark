@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as TagsImport } from './routes/tags'
 import { Route as IndexImport } from './routes/index'
+import { Route as ShareTokenIdImport } from './routes/share/$tokenId'
 import { Route as ContentTypeIdImport } from './routes/content/$typeId'
 import { Route as AuthRegisterImport } from './routes/auth/register'
 import { Route as AuthProfileImport } from './routes/auth/profile'
@@ -28,6 +29,12 @@ const TagsRoute = TagsImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ShareTokenIdRoute = ShareTokenIdImport.update({
+  id: '/share/$tokenId',
+  path: '/share/$tokenId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -88,6 +95,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContentTypeIdImport
       parentRoute: typeof rootRoute
     }
+    '/share/$tokenId': {
+      id: '/share/$tokenId'
+      path: '/share/$tokenId'
+      fullPath: '/share/$tokenId'
+      preLoaderRoute: typeof ShareTokenIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -99,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/auth/profile': typeof AuthProfileRoute
   '/auth/register': typeof AuthRegisterRoute
   '/content/$typeId': typeof ContentTypeIdRoute
+  '/share/$tokenId': typeof ShareTokenIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -107,6 +122,7 @@ export interface FileRoutesByTo {
   '/auth/profile': typeof AuthProfileRoute
   '/auth/register': typeof AuthRegisterRoute
   '/content/$typeId': typeof ContentTypeIdRoute
+  '/share/$tokenId': typeof ShareTokenIdRoute
 }
 
 export interface FileRoutesById {
@@ -116,6 +132,7 @@ export interface FileRoutesById {
   '/auth/profile': typeof AuthProfileRoute
   '/auth/register': typeof AuthRegisterRoute
   '/content/$typeId': typeof ContentTypeIdRoute
+  '/share/$tokenId': typeof ShareTokenIdRoute
 }
 
 export interface FileRouteTypes {
@@ -126,8 +143,15 @@ export interface FileRouteTypes {
     | '/auth/profile'
     | '/auth/register'
     | '/content/$typeId'
+    | '/share/$tokenId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/tags' | '/auth/profile' | '/auth/register' | '/content/$typeId'
+  to:
+    | '/'
+    | '/tags'
+    | '/auth/profile'
+    | '/auth/register'
+    | '/content/$typeId'
+    | '/share/$tokenId'
   id:
     | '__root__'
     | '/'
@@ -135,6 +159,7 @@ export interface FileRouteTypes {
     | '/auth/profile'
     | '/auth/register'
     | '/content/$typeId'
+    | '/share/$tokenId'
   fileRoutesById: FileRoutesById
 }
 
@@ -144,6 +169,7 @@ export interface RootRouteChildren {
   AuthProfileRoute: typeof AuthProfileRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
   ContentTypeIdRoute: typeof ContentTypeIdRoute
+  ShareTokenIdRoute: typeof ShareTokenIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -152,6 +178,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthProfileRoute: AuthProfileRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   ContentTypeIdRoute: ContentTypeIdRoute,
+  ShareTokenIdRoute: ShareTokenIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -168,7 +195,8 @@ export const routeTree = rootRoute
         "/tags",
         "/auth/profile",
         "/auth/register",
-        "/content/$typeId"
+        "/content/$typeId",
+        "/share/$tokenId"
       ]
     },
     "/": {
@@ -185,6 +213,9 @@ export const routeTree = rootRoute
     },
     "/content/$typeId": {
       "filePath": "content/$typeId.tsx"
+    },
+    "/share/$tokenId": {
+      "filePath": "share/$tokenId.tsx"
     }
   }
 }
