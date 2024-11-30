@@ -6,6 +6,7 @@ import { contentRoute } from "./routes/content.route";
 import authRoute from "./routes/auth.route";
 import typeRoute from "./routes/type.route";
 import tagRoute from "./routes/tag.route";
+import shareRoute from "./routes/share.route";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api/content", contentRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/type", typeRoute);
 app.use("/api/tag", tagRoute);
+app.use("/api/share", shareRoute);
 
 app.listen(3000, () => {
   connectDB().then(() => console.log("Server runing on port 3000"));

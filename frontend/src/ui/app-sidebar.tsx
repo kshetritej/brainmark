@@ -16,7 +16,7 @@ import { Brain, Hash, User } from "lucide-react"
 
 export function AppSidebar() {
     const types = useGetAllTypes().data?.types;
-    const getContentByType = useGetContentByType();
+    const userIsLoggedIn = localStorage.getItem('token') !== null;
     const menuItems = types?.map((type: any) => {
         return {
             id: type._id,
@@ -31,6 +31,7 @@ export function AppSidebar() {
                 </Link>
             </SidebarHeader>
             <SidebarContent>
+                {userIsLoggedIn &&
                 <SidebarGroup>
                     <SidebarGroupLabel>Application</SidebarGroupLabel>
                     {
@@ -44,10 +45,13 @@ export function AppSidebar() {
                     <Link to="/tags">
                         <SidebarMenuButton className="py-8"><Hash /> Tags</SidebarMenuButton>
                     </Link>
-                    <Link to="/auth">
+                </SidebarGroup>
+                
+                }
+                <SidebarGroup>
+                    <Link to="/auth/profile">
                         <SidebarMenuButton className="py-8"><User size={42} /> Profile</SidebarMenuButton>
                     </Link>
-
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter />

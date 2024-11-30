@@ -12,21 +12,16 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as TagsImport } from './routes/tags'
-import { Route as AuthImport } from './routes/auth'
 import { Route as IndexImport } from './routes/index'
 import { Route as ContentTypeIdImport } from './routes/content/$typeId'
+import { Route as AuthRegisterImport } from './routes/auth/register'
+import { Route as AuthProfileImport } from './routes/auth/profile'
 
 // Create/Update Routes
 
 const TagsRoute = TagsImport.update({
   id: '/tags',
   path: '/tags',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AuthRoute = AuthImport.update({
-  id: '/auth',
-  path: '/auth',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -42,6 +37,18 @@ const ContentTypeIdRoute = ContentTypeIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthRegisterRoute = AuthRegisterImport.update({
+  id: '/auth/register',
+  path: '/auth/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthProfileRoute = AuthProfileImport.update({
+  id: '/auth/profile',
+  path: '/auth/profile',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -53,18 +60,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthImport
-      parentRoute: typeof rootRoute
-    }
     '/tags': {
       id: '/tags'
       path: '/tags'
       fullPath: '/tags'
       preLoaderRoute: typeof TagsImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth/profile': {
+      id: '/auth/profile'
+      path: '/auth/profile'
+      fullPath: '/auth/profile'
+      preLoaderRoute: typeof AuthProfileImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth/register': {
+      id: '/auth/register'
+      path: '/auth/register'
+      fullPath: '/auth/register'
+      preLoaderRoute: typeof AuthRegisterImport
       parentRoute: typeof rootRoute
     }
     '/content/$typeId': {
@@ -81,46 +95,62 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/tags': typeof TagsRoute
+  '/auth/profile': typeof AuthProfileRoute
+  '/auth/register': typeof AuthRegisterRoute
   '/content/$typeId': typeof ContentTypeIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/tags': typeof TagsRoute
+  '/auth/profile': typeof AuthProfileRoute
+  '/auth/register': typeof AuthRegisterRoute
   '/content/$typeId': typeof ContentTypeIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/tags': typeof TagsRoute
+  '/auth/profile': typeof AuthProfileRoute
+  '/auth/register': typeof AuthRegisterRoute
   '/content/$typeId': typeof ContentTypeIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/tags' | '/content/$typeId'
+  fullPaths:
+    | '/'
+    | '/tags'
+    | '/auth/profile'
+    | '/auth/register'
+    | '/content/$typeId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/tags' | '/content/$typeId'
-  id: '__root__' | '/' | '/auth' | '/tags' | '/content/$typeId'
+  to: '/' | '/tags' | '/auth/profile' | '/auth/register' | '/content/$typeId'
+  id:
+    | '__root__'
+    | '/'
+    | '/tags'
+    | '/auth/profile'
+    | '/auth/register'
+    | '/content/$typeId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthRoute: typeof AuthRoute
   TagsRoute: typeof TagsRoute
+  AuthProfileRoute: typeof AuthProfileRoute
+  AuthRegisterRoute: typeof AuthRegisterRoute
   ContentTypeIdRoute: typeof ContentTypeIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthRoute: AuthRoute,
   TagsRoute: TagsRoute,
+  AuthProfileRoute: AuthProfileRoute,
+  AuthRegisterRoute: AuthRegisterRoute,
   ContentTypeIdRoute: ContentTypeIdRoute,
 }
 
@@ -135,19 +165,23 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/auth",
         "/tags",
+        "/auth/profile",
+        "/auth/register",
         "/content/$typeId"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/auth": {
-      "filePath": "auth.tsx"
-    },
     "/tags": {
       "filePath": "tags.tsx"
+    },
+    "/auth/profile": {
+      "filePath": "auth/profile.tsx"
+    },
+    "/auth/register": {
+      "filePath": "auth/register.tsx"
     },
     "/content/$typeId": {
       "filePath": "content/$typeId.tsx"

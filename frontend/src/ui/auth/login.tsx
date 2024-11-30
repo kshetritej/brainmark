@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router"
+import { Link, useNavigate } from "@tanstack/react-router"
 import { Button } from "@/components/ui/button"
 import { useForm } from "react-hook-form"
 import {
@@ -13,23 +13,11 @@ import { Label } from "@/components/ui/label"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import { toast } from "@/hooks/use-toast"
+import { useLogin } from "@/queries/auth.query"
 
 export function LoginForm() {
-    const handleLogin = useMutation({
-        mutationKey: ['login'],
-        mutationFn: async (data: any) => {
-            const res = await axios.post('http://localhost:3000/user/login', data)
-            return res.data
-        },
-        onSuccess: (response) => {
-            toast({
-                title: response.message,
-                variant: 'default',
-            })
-            localStorage.setItem('token', response.token)
-        }
-
-    })
+    const navigate = useNavigate();
+    const handleLogin = useLogin();
     const { register, handleSubmit } = useForm({
         defaultValues: {
             email: '',
@@ -37,7 +25,26 @@ export function LoginForm() {
         }
     })
     const handleForm = (data: any) => {
-        handleLogin.mutate(data)
+        handleLogin.mutate(data, {
+            onSuccess: (data) => {
+                localStorage.setItem('token', data.token)
+                localStorage.setItem('user', JSON.stringify(data.user))
+                navigate({
+                    to: "/"
+                });
+                toast({
+                    title: "Login Successful",
+                    description: "You have successfully logged in.",
+                })
+            },
+            onError: (error) => {
+                toast({
+                    title: "Error",
+                    description: "Invalid credentials. Please try again.",
+                    variant: "destructive",
+                })
+            }
+        })
     }
     return (
         <div className="flex justify-center mx-auto  items-center h-screen">
@@ -84,7 +91,7 @@ export function LoginForm() {
                     </form>
                     <div className="mt-4 text-center text-sm">
                         Don&apos;t have an account?{" "}
-                        <Link to="/auth" className="underline">
+                        <Link to="/auth/register" className="underline">
                             Sign up
                         </Link>
                     </div>
